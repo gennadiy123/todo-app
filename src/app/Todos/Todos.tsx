@@ -1,20 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { nanoid } from "nanoid";
 
 let tasks = ["Repair a car", "Find a job"];
 
 export const Todos = () => {
-  const [task, setTask] = useState("");
+  const [task, setTask] = useState<{ name: string; id: string }[]>([]);
 
   useEffect(() => {
     localStorage.getItem("todos");
   }, []);
 
-  const onSubmit = (e) => {
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
-    setTask(e.target[0].value)
-    e.target.reset()
+    const formElement = e.currentTarget as HTMLFormElement;
+    const inputElement = formElement[0] as HTMLInputElement;
+    if (task.some((el) => el.name === inputElement.value)) {
+      alert("This task is already exists!");
+    } else {
+      setTask([...task, { name: inputElement.value, id: nanoid() }]);
+    }
+
+    formElement.reset();
   };
 
   return (
@@ -23,7 +33,11 @@ export const Todos = () => {
         <input placeholder="Input your task" />
         <button type="submit">Add task</button>
       </form>
-      <p>{task}</p>
+      <ol>
+        {task.map((el) => (
+          <li key={el.id}>{el.name}</li>
+        ))}
+      </ol>
     </>
   );
 };
