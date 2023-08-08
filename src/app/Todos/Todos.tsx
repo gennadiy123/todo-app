@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { nanoid } from "nanoid";
+import { Task, TaskName, Button } from "./Todos.styles";
 
 export const Todos = () => {
   const [task, setTask] = useState<{ name: string; id: string }[]>([]);
@@ -52,12 +53,14 @@ export const Todos = () => {
       </form>
       <ol>
         {task.map(({ id, name }) => (
-          <div key={id}>
-            <li>{name}</li>
-            <button name={id} onClick={onRemoveTask}>
-              Remove task
-            </button>
-          </div>
+          <li key={id}>
+            <Task>
+              <TaskName>{name}</TaskName>
+              <Button name={id} onClick={onRemoveTask}>
+                Remove task
+              </Button>
+            </Task>
+          </li>
         ))}
       </ol>
     </>
